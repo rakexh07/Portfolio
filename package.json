@@ -9,7 +9,6 @@
     "lint": "next lint"
   },
   "dependencies": {
-    "@next/swc-win32-x64-msvc": "^16.2.12",
     "framer-motion": "11.3.19",
     "gsap": "3.12.5",
     "lucide-react": "0.408.0",
