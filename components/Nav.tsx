@@ -1,106 +1,104 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { profile } from "@/lib/data";
+import MenuOverlay from "./MenuOverlay";
 
 export default function Nav() {
-  const [isOpen, setIsOpen] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
+  const [menuOpen, setMenuOpen] = useState(false);
 
-  const links = [
-    { href: "#hero", label: "Home", active: true },
-    { href: "#buildlog", label: "Build Log", active: false },
-    { href: "#stack", label: "Stack", active: false },
-    { href: "#projects", label: "Projects", active: false },
-    { href: "#education", label: "Education", active: false },
-    { href: "#contact", label: "Contact", active: false },
-  ];
+  useEffect(() => {
+    const onScroll = () => {
+      setScrolled(window.scrollY > 12);
+    };
+
+    onScroll();
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => {
+      window.removeEventListener("scroll", onScroll);
+    };
+  }, []);
 
   return (
-    <header
-      className="fixed top-0 left-0 right-0 z-[100] pointer-events-none"
-      style={{ paddingTop: "env(safe-area-inset-top, 12px)" }}
-    >
-      <div className="pointer-events-none px-3 sm:px-5 md:px-8 pt-[18px]">
-        <div className="flex items-start justify-between gap-3">
-          <div className="hidden lg:flex items-center gap-2 font-mono text-[9px] sm:text-[10px] tracking-wide text-muted pt-1.5 min-w-[180px]">
-            <div className="w-5 h-5 rounded-full border border-line flex items-center justify-center flex-none">
-              <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="text-muted">
-                <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z" />
-                <circle cx="12" cy="10" r="3" />
-              </svg>
+    <>
+      <header
+        className={`fixed top-0 left-0 right-0 z-[100] transition-all duration-300`}
+        style={{ paddingTop: "env(safe-area-inset-top, 12px)" }}
+      >
+        <div
+          className={`mx-2 sm:mx-4 md:mx-8 mt-1 sm:mt-2 md:mt-2.5 rounded-2xl px-2.5 sm:px-4 md:px-7 py-2 sm:py-2.5 md:py-3.5 transition-all duration-300 ${
+            scrolled
+              ? "bg-bg-cream-2/85 backdrop-blur-xl border border-border-cream shadow-[0_10px_45px_-20px_rgba(138,64,34,0.45)]"
+              : "bg-transparent"
+          }`}
+        >
+          <nav className={`flex items-center justify-between transition-all duration-300 gap-1 sm:gap-2`}>
+            <div className="flex items-center shrink-0">
+              <button
+                type="button"
+                aria-label="Open menu"
+                onClick={() => setMenuOpen(true)}
+                className={`inline-flex flex-col justify-center items-center gap-[4px] sm:gap-[5px] p-1 sm:p-1.5 md:p-2 rounded-lg transition-colors group ${
+                  scrolled
+                    ? "text-fg-warm hover:text-burnt hover:bg-burnt/8"
+                    : "text-cream hover:text-gold hover:bg-cream/10"
+                }`}
+              >
+                <span
+                  className={`block h-[2px] rounded-full transition-all duration-300 group-hover:w-7 sm:group-hover:w-8 ${scrolled ? "bg-fg-warm" : "bg-cream"}`}
+                  style={{ width: "clamp(18px, 5vw, 24px)" }}
+                />
+                <span
+                  className={`block h-[2px] rounded-full transition-all duration-300 ${scrolled ? "bg-fg-warm" : "bg-cream"}`}
+                  style={{ width: "clamp(18px, 5vw, 24px)" }}
+                />
+                <span
+                  className={`block h-[2px] rounded-full transition-all duration-300 group-hover:w-7 sm:group-hover:w-8 ${scrolled ? "bg-fg-warm" : "bg-cream"}`}
+                  style={{ width: "clamp(18px, 5vw, 24px)" }}
+                />
+              </button>
             </div>
-            <div>
-              <div className="text-fg uppercase font-semibold text-[10px] tracking-[1.5px]">Location</div>
-              <div className="truncate max-w-[150px]">{profile.location}</div>
-            </div>
-          </div>
 
-          <div className="relative flex-1 flex flex-col items-center pointer-events-auto">
-            <button
-              type="button"
-              onClick={() => setIsOpen((v) => !v)}
-              onMouseEnter={() => setIsOpen(true)}
-              className="font-display text-[11px] sm:text-xs md:text-sm tracking-wider px-4 sm:px-5 md:px-6 py-1.5 sm:py-1.75 md:py-2 rounded-full bg-panel border border-line shadow-[0_4px_24px_rgba(0,0,0,0.4)] cursor-pointer relative z-20 hover:bg-bg2"
-            >
-              RAKESH<span className="text-accent">.</span>DEV
-            </button>
+            <div className="flex-1 flex justify-center pointer-events-none min-w-0 px-0.5 sm:px-1 md:px-2">
+              <a
+                href="#hero"
+                className={`font-serif italic font-semibold transition-colors tracking-tight pointer-events-auto truncate ${
+                  scrolled
+                    ? "text-fg-warm hover:text-burnt"
+                    : "text-cream hover:text-gold"
+                }`}
+                style={{ fontSize: "clamp(16px, 4.5vw, 32px)" }}
+              >
+                {profile.name}
+              </a>
+            </div>
 
-            <div
-              onMouseEnter={() => setIsOpen(true)}
-              onMouseLeave={() => setIsOpen(false)}
-              className={`mt-[-6px] pt-[6px] w-full max-w-lg sm:max-w-xl md:max-w-3xl lg:max-w-5xl transition-all duration-400 ease-out origin-top ${
-                isOpen
-                  ? "opacity-100 translate-y-0 scale-y-100"
-                  : "opacity-0 -translate-y-3 scale-y-95 pointer-events-none"
-              }`}
-            >
-              <nav className="w-full rounded-lg sm:rounded-xl md:rounded-2xl bg-panel border border-line shadow-[0_8px_28px_rgba(0,0,0,0.5)] px-1.5 sm:px-2 md:px-3.5 lg:px-3.5 py-1.5 sm:py-2 md:py-3 lg:py-2.5">
-                <ul className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-1 sm:gap-1 md:gap-1.5 lg:gap-1">
-                  {links.map((l) => (
-                    <li key={l.href}>
-                      <a
-                        href={l.href}
-                        onClick={() => setIsOpen(false)}
-                        className={`flex flex-col items-center justify-center gap-0.5 sm:gap-0.5 md:gap-1 lg:gap-0.5 px-1 sm:px-1.5 md:px-2 lg:px-1.5 py-1.5 sm:py-1.5 md:py-2.5 lg:py-2 rounded-md sm:rounded-lg md:rounded-xl lg:rounded-lg transition-all duration-200 ${
-                          l.active
-                            ? "bg-accent text-bg shadow-[0_2px_10px_rgba(198,255,61,0.22)]"
-                            : "text-fg hover:bg-line/50"
-                        }`}
-                      >
-                        <span
-                          className={`w-1.5 h-1.5 sm:w-1.75 sm:h-1.75 md:w-2 md:h-2 rounded-full transition-all duration-200 ${
-                            l.active ? "bg-bg" : "bg-muted hover:bg-fg"
-                          }`}
-                        />
-                        <span
-                          className={`font-mono uppercase tracking-[0.5px] sm:tracking-[1px] md:tracking-[1.25px] lg:tracking-[1px] font-semibold text-[8px] sm:text-[8.5px] md:text-[10.5px] lg:text-[9.5px] whitespace-nowrap text-center leading-tight ${
-                            l.active ? "text-bg" : "text-fg/90"
-                          }`}
-                        >
-                          {l.label}
-                        </span>
-                      </a>
-                    </li>
-                  ))}
-                </ul>
-              </nav>
+            <div className="flex items-center justify-end shrink-0">
+              <a
+                href="#contact"
+                className={`font-mono uppercase tracking-widest font-semibold transition-all flex items-center gap-0.5 sm:gap-1 md:gap-1.5 group rounded-full border ${
+                  scrolled
+                    ? "text-fg-warm hover:text-burnt border-border-cream hover:border-burnt/80 hover:bg-burnt/8"
+                    : "text-cream hover:text-gold border-cream/30 hover:border-cream/70 hover:bg-cream/10"
+                }`}
+                style={{
+                  fontSize: "clamp(8.5px, 2vw, 12.5px)",
+                  padding: "clamp(4px, 1vw, 7px) clamp(8px, 1.8vw, 16px)",
+                }}
+              >
+                <span className="hidden sm:inline">Let&apos;s chat</span>
+                <span className="sm:hidden">Chat</span>
+                <span className={`transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5 ${scrolled ? "text-burnt" : "text-cream"}`}>
+                  →
+                </span>
+              </a>
             </div>
-          </div>
-
-          <div className="hidden lg:flex items-center justify-end gap-2 font-mono text-[9px] sm:text-[10px] tracking-wide text-muted pt-1.5 min-w-[180px]">
-            <div className="text-right">
-              <div className="text-fg uppercase font-semibold text-[10px] tracking-[1.5px]">Get in Touch</div>
-              <div className="truncate max-w-[150px]">{profile.email}</div>
-            </div>
-            <div className="w-5 h-5 rounded-full border border-line flex items-center justify-center flex-none">
-              <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="text-muted">
-                <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z" />
-                <polyline points="22,6 12,13 2,6" />
-              </svg>
-            </div>
-          </div>
+          </nav>
         </div>
-      </div>
-    </header>
+      </header>
+
+      <MenuOverlay open={menuOpen} onClose={() => setMenuOpen(false)} />
+    </>
   );
 }

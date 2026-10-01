@@ -3,35 +3,43 @@
 import { motion } from "framer-motion";
 
 export default function SectionHead({
-  idx,
+  eyebrow,
   title,
   description,
   className = "",
 }: {
-  idx: string;
+  eyebrow?: string;
   title: string;
   description?: string;
   className?: string;
 }) {
   return (
     <motion.div
-      initial={{ opacity: 0, y: 30 }}
+      initial={{ opacity: 0, y: 20 }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, amount: 0.25 }}
-      transition={{ duration: 0.8, ease: "easeOut" }}
-      className={`px-4 sm:px-6 md:px-[8vw] pt-12 sm:pt-16 md:pt-20 lg:pt-24 pb-6 sm:pb-8 md:pb-10 lg:pb-14 ${className}`}
+      transition={{ duration: 0.7, ease: "easeOut" }}
+      className={`px-4 sm:px-6 md:px-[8vw] pt-10 sm:pt-12 md:pt-16 pb-4 sm:pb-5 md:pb-7 text-left ${className}`}
     >
-      <span className="block font-mono text-accent text-[10px] sm:text-[11px] md:text-[13px] tracking-[1.3px] sm:tracking-[1.5px] md:tracking-[2px] mb-1 sm:mb-1.5 md:mb-3">
-        {idx}
-      </span>
+      {eyebrow && (
+        <div className="font-mono text-cream-muted text-[9.5px] sm:text-[10px] md:text-[11px] tracking-[0.18em] sm:tracking-[0.2em] uppercase mb-1.5 sm:mb-2 md:mb-3 eyebrow">
+          {eyebrow}
+        </div>
+      )}
       <h2
-        className="font-display uppercase leading-[0.95] tracking-[-0.5px] sm:tracking-[-1px]"
-        style={{ fontSize: "clamp(26px, 6.5vw, 84px)" }}
+        className="font-display text-cream tracking-tight"
+        style={{
+          fontSize: "clamp(26px, 6vw, 64px)",
+          lineHeight: "0.97",
+        }}
       >
         {title}
       </h2>
       {description && (
-        <p className="max-w-[560px] text-muted mt-2 sm:mt-2.5 md:mt-5 text-[12px] sm:text-[13px] md:text-base leading-relaxed">
+        <p
+          className="max-w-[560px] text-cream-muted mt-2 sm:mt-3 md:mt-4 leading-relaxed opacity-90"
+          style={{ fontSize: "clamp(12px, 2.2vw, 16px)" }}
+        >
           {description}
         </p>
       )}

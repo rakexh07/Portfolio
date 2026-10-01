@@ -1,16 +1,25 @@
 "use client";
 
-import { useScroll, motion } from "framer-motion";
+import { motion, useScroll, useSpring } from "framer-motion";
 
 export default function ProgressRail() {
   const { scrollYProgress } = useScroll();
+  const scaleY = useSpring(scrollYProgress, {
+    stiffness: 120,
+    damping: 30,
+    mass: 0.4,
+  });
 
   return (
-    <div className="fixed right-[max(12px,env(safe-area-inset-right))] sm:right-[max(16px,env(safe-area-inset-right))] top-1/2 -translate-y-1/2 w-[2px] h-24 sm:h-28 md:h-32 lg:h-40 bg-line z-[100] hidden sm:block">
+    <>
       <motion.div
-        className="w-full bg-accent origin-top"
-        style={{ scaleY: scrollYProgress, height: "100%" }}
+        style={{ scaleY }}
+        className="fixed right-0 top-0 z-[90] w-[3px] h-[100svh] origin-top bg-gradient-to-b from-orange-bright via-burnt to-red-deep pointer-events-none hidden md:block shadow-[0_0_12px_rgba(224,112,32,0.5)]"
       />
-    </div>
+      <motion.div
+        style={{ scaleX: scrollYProgress }}
+        className="fixed left-0 top-0 z-[90] h-[3px] w-full origin-left bg-gradient-to-r from-orange-bright via-burnt to-red-deep pointer-events-none md:hidden shadow-[0_0_10px_rgba(224,112,32,0.45)]"
+      />
+    </>
   );
 }
